@@ -13,11 +13,12 @@
 TODO:
 - check against other PHP HAML files
 - add highlighting for tag attributes
-- add highlighting for single and multi line HAML comments
-- add proper behaviour for inline CSS and JavaScript
 - add proper autocomplete for HTML enteties beyond embeded PHP
+- add highlighting for "-#" comments
 
 CHANGES:
++ added highlighting for single and multi line HAML comments
++ added proper behaviour for inline CSS and JavaScript
 + fixed native PHP files highlighting loose
 	</string>
 	<!-- END PHP HAML addition -->
@@ -260,9 +261,9 @@ CHANGES:
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>#\{</string>
+			<string>#{</string>
 			<key>end</key>
-			<string>(?&lt;!\\)\}</string>
+			<string>(?&lt;!\\)}</string>
 			<key>comment</key>
 			<string>Embeded PHP code.</string>
 			<key>patterns</key>
@@ -358,30 +359,55 @@ CHANGES:
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.definition.comment.php</string>
+					<string>punctuation.definition.prolog.haml</string>
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(/).*?($\n?|(?=\?&gt;))</string>
+			<string>^(!!!)($|\s.*)</string>
 			<key>name</key>
-			<string>comment.line.double-slash.haml</string>
+			<string>meta.prolog.haml</string>
 		</dict>
 		<dict>
-			<key>begin</key>
-<!-- FIXME -->
-			<string>^\s*(\-\#)</string>
-			<key>end</key>
-			<string>^(?!\1\s)</string>
-			<key>comment</key>
-			<string>Multiline HAML comment.</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.definition.comment.php</string>
+					<string>punctuation.section.comment.haml</string>
 				</dict>
 			</dict>
+			<key>match</key>
+			<string>^[ 	]*(/)\s*\S.*$\n?</string>
+			<key>name</key>
+			<string>comment.line.slash.haml</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>&lt;(?!(?i:a|abbr|access|acronym|action|address|applet|area|article|aside|audio|b|base|basefont|big|blockcode|blockquote|body|br|button|canvas|caption|center|cite|code|col|colgroup|command|datalist|dd|del|delete|details|di|dir|dispatch|div|dl|dt|em|embed|fieldset|figure|font|footer|form|frame|frameset|group|h|h1|h2|h3|h4|h5|h6|handler|head|header|hgroup|hr|html|i|iframe|img|input|ins|insert|l|label|legend|li|link|listing|load|map|mark|menu|message|meta|meter|nav|noframes|noscript|object|ol|optgroup|option|output|p|param|plaintext|pre|progress|samp|script|secret|section|select|separator|small|source|span|strike|strong|style|sub|submit|summary|switch|table|tbody|td|textarea|tfoot|th|thead|title|tr|trigger|tt|u|ul|upload|video|/|%))</string>
+			<key>name</key>
+			<string>keyword.other.angle-bracket.haml</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>text.html.basic</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>&gt;</string>
+			<key>name</key>
+			<string>keyword.other.angle-bracket.haml</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#css</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#sass</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#javascript</string>
 		</dict>
 		<!-- END PHP HAML addition -->
 	</array>
@@ -648,26 +674,6 @@ CHANGES:
 				</dict>
 			</array>
 		</dict>
-		<!-- BEGIN PHP HAML addition -->
-		<key>phpline</key>
-		<dict>
-			<key>begin</key>
-			<string>=|-|~</string>
-			<key>contentName</key>
-			<string>source.php.embedded.haml</string>
-			<key>end</key>
-			<string>((do|\{)( \|[^|]+\|)?)$|$|^(?!.*\|\s*$)</string>
-			<key>name</key>
-			<string>meta.line.php.haml</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#language</string>
-				</dict>
-			</array>
-		</dict>
-		<!-- END PHP HAML addition -->
 		<key>language</key>
 		<dict>
 			<key>patterns</key>
@@ -3629,6 +3635,80 @@ CHANGES:
 				</dict>
 			</array>
 		</dict>
+		<!-- BEGIN PHP HAML addition -->
+		<key>phpline</key>
+		<dict>
+			<key>begin</key>
+			<string>=|-|~</string>
+			<key>contentName</key>
+			<string>source.php.embedded.haml</string>
+			<key>end</key>
+			<string>((do|\{)( \|[^|]+\|)?)$|$|^(?!.*\|\s*$)</string>
+			<key>name</key>
+			<string>meta.line.php.haml</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#language</string>
+				</dict>
+			</array>
+		</dict>
+		<key>css</key>
+		<dict>
+			<key>begin</key>
+			<string>^(\s*):css</string>
+			<key>end</key>
+			<string>^(?!\1\s)</string>
+			<key>name</key>
+			<string>source.css</string>
+			<key>comment</key>
+			<string>Inline CSS.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.css</string>
+				</dict>
+			</array>
+		</dict>
+		<key>sass</key>
+		<dict>
+			<key>begin</key>
+			<string>^(\s*):sass</string>
+			<key>end</key>
+			<string>^(?!\1 )</string>
+			<key>name</key>
+			<string>source.sass</string>
+			<key>comment</key>
+			<string>Inline SASS.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.sass</string>
+				</dict>
+			</array>
+		</dict>
+		<key>javascript</key>
+		<dict>
+			<key>begin</key>
+			<string>^(\s*):javascript</string>
+			<key>end</key>
+			<string>^(?!\1\s)</string>
+			<key>name</key>
+			<string>source.js</string>
+			<key>comment</key>
+			<string>Inline JavaScript.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.js</string>
+				</dict>
+			</array>
+		</dict>
+		<!-- END PHP HAML addition -->
 	</dict>
 	<key>scopeName</key>
 	<!-- BEGIN PHP HAML addition -->
