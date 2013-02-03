@@ -9,13 +9,16 @@
 • Try to improve parameters list syntax – scope numbers, ‘=’, ‘,’ and possibly be intelligent about entity ordering
 • Is meta.function-call the correct scope? I've added it to my theme but by default it's not highlighted</string>
 	-->
-	<string>TODO:
-+ fix native PHP files highlighting loose
+	<string>
+TODO:
 - check against other PHP HAML files
 - add highlighting for tag attributes
 - add highlighting for single and multi line HAML comments
 - add proper behaviour for inline CSS and JavaScript
 - add proper autocomplete for HTML enteties beyond embeded PHP
+
+CHANGES:
++ fixed native PHP files highlighting loose
 	</string>
 	<!-- END PHP HAML addition -->
 	<key>fileTypes</key>
