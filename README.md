@@ -1,7 +1,7 @@
 SublimeText PHP HAML
 ====================
 
-HAML support for PHP in Sublime Text 2
+PHP HAML syntax support for Sublime Text 2
 
 
 ## Installation

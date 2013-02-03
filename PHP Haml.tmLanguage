@@ -2,13 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>comment</key>
 	<!-- BEGIN PHP HAML addition -->
 	<!--
-	<key>comment</key>
 	<string>TODO:
 • Try to improve parameters list syntax – scope numbers, ‘=’, ‘,’ and possibly be intelligent about entity ordering
 • Is meta.function-call the correct scope? I've added it to my theme but by default it's not highlighted</string>
 	-->
+	<string>TODO:
++ fix native PHP files highlighting loose
+- check against other PHP HAML files
+- add highlighting for tag attributes
+- add highlighting for single and multi line HAML comments
+- add proper behaviour for inline CSS and JavaScript
+- add proper autocomplete for HTML enteties beyond embeded PHP
+	</string>
 	<!-- END PHP HAML addition -->
 	<key>fileTypes</key>
 	<array>
@@ -340,6 +348,37 @@
 					<string>punctuation.terminator.tag.haml</string>
 				</dict>
 			</array>
+		</dict>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.comment.php</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(/).*?($\n?|(?=\?&gt;))</string>
+			<key>name</key>
+			<string>comment.line.double-slash.haml</string>
+		</dict>
+		<dict>
+			<key>begin</key>
+<!-- FIXME -->
+			<string>^\s*(\-\#)</string>
+			<key>end</key>
+			<string>^(?!\1\s)</string>
+			<key>comment</key>
+			<string>Multiline HAML comment.</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.comment.php</string>
+				</dict>
+			</dict>
 		</dict>
 		<!-- END PHP HAML addition -->
 	</array>
@@ -3594,7 +3633,7 @@
 	<string>source.php</string>
 	-->
 	<!-- END PHP HAML addition -->
-	<string>source.php</string>
+	<string>source.php.haml</string>
 	<key>uuid</key>
 	<!-- BEGIN PHP HAML addition -->
 	<!--
