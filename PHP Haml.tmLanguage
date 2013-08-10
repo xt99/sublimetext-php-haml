@@ -17,6 +17,7 @@ TODO:
 - add highlighting for "-#" comments
 
 CHANGES:
++ ignore empty lines in PHP blocks
 + added highlighting for single and multi line HAML comments
 + added proper behaviour for inline CSS and JavaScript
 + fixed native PHP files highlighting loose
@@ -218,7 +219,7 @@ CHANGES:
 			<!--
 			<string>(\?)&gt;</string>
 			-->
-			<string>^(?!\1\s)</string>
+			<string>^(?!\1\s)(?!$)</string>
 			<!-- END PHP HAML addition -->
 			<key>endCaptures</key>
 			<dict>
