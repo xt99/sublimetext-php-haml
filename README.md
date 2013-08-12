@@ -1,7 +1,7 @@
 SublimeText PHP HAML
 ====================
 
-PHP HAML syntax support for Sublime Text 2
+PHP HAML syntax support for Sublime Text 2/3.
 
 
 ## Installation
@@ -11,7 +11,7 @@ The easiest way to install this is with [Package Control](http://wbond.net/subli
 Another way to install is : 
 
 ```
-$ cd ~/.config/sublime-text-2/Packages/
+$ cd ~/.config/sublime-text-3/Packages/
 $ git clone https://github.com/xt99/sublimetext-php-haml.git PHP\ Haml
 ```
 
