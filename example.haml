@@ -1,0 +1,19 @@
+// attributes with embeded PHP (clearest variant of setting attributes)
+.gallery(id="#{ $album->id }" data-parent-id="#{ $album->getParent()->id }" data-preview-style="slide")
+  // single PHP line
+  - foreach( $album->images as $img )
+    // PHP block
+    :php
+      $imgSrc = App::config()->imageServer.$img->src;
+      $imgTitle = App::utils()->charLimit( $img->title, 50 );
+
+    .preview
+      // mix with Ruby-like attributes (more complex variant of setting attributes)
+      %a(href=>"#{$imgSrc}" :target="blank", data-action="preview")
+        %img{:src => "#{$imgSrc}", :alt =>"Image'#{ $imgTitle }' ©YourSite" :border=> "none"}
+
+      // echo PHP variable value into tag content
+      %em.title(data-image-id="#{ intval($img->id) }")
+        = $imgTitle
+
+      %i.timeago= $img->created_at

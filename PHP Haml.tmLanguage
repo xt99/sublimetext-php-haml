@@ -11,12 +11,13 @@
 	-->
 	<string>
 TODO:
-- check against other PHP HAML files
-- add highlighting for tag attributes
+- better support for single-quoted attributes with embeded PHP
 - add proper autocomplete for HTML enteties beyond embeded PHP
 - add highlighting for "-#" comments
 
 CHANGES:
++ add highlighting for tag attributes
++ check against other PHP HAML files
 + ignore empty lines in PHP blocks
 + added highlighting for single and multi line HAML comments
 + added proper behaviour for inline CSS and JavaScript
@@ -262,21 +263,6 @@ CHANGES:
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>#{</string>
-			<key>end</key>
-			<string>(?&lt;!\\)}</string>
-			<key>comment</key>
-			<string>Embeded PHP code.</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#language</string>
-				</dict>
-			</array>
-		</dict>
-		<dict>
-			<key>begin</key>
 			<string>^\s*(?:((%)([\w:]+))|(?=\.|#[^\{]))</string>
 			<key>captures</key>
 			<dict>
@@ -297,7 +283,7 @@ CHANGES:
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>$|(?!\.|#|\{|\[|=|-|~|/)</string>
+			<string>$|(?!\.|#|\{|\(|\[|=|-|~|/)</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -314,16 +300,29 @@ CHANGES:
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>\{(?=.*\}|.*\|\s*$)</string>
+					<string>(\{|\()(?=.*\}|.*\)|.*\|\s*$)</string>
+					<!-- <string>(\{|\()(?=.*\}|.*\)|.*\|\s*$)</string> -->
 					<key>end</key>
-					<string>\}|$|^(?!.*\|\s*$)</string>
+					<string>(\}|\))|$|^(?!.*\|\s*$)</string>
 					<key>name</key>
 					<string>meta.section.attributes.haml</string>
 					<key>patterns</key>
 					<array>
 						<dict>
 							<key>include</key>
-							<string>#phpline</string>
+							<string>#embeded-phpline</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#html-tag-generic-attribute</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#html-string-double-quoted</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#html-string-single-quoted</string>
 						</dict>
 					</array>
 				</dict>
@@ -3655,6 +3654,40 @@ CHANGES:
 				</dict>
 			</array>
 		</dict>
+		<key>embeded-phpline</key>
+		<dict>
+			<key>begin</key>
+			<string>#{</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.section.embedded.begin.php</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>(?&lt;!\\)}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.section.embedded.end.php</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Embeded PHP</string>
+			<key>name</key>
+			<string>source.php.embedded.source</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#language</string>
+				</dict>
+			</array>
+		</dict>
 		<key>css</key>
 		<dict>
 			<key>begin</key>
@@ -3706,6 +3739,144 @@ CHANGES:
 				<dict>
 					<key>include</key>
 					<string>source.js</string>
+				</dict>
+			</array>
+		</dict>
+		<key>html-tag-generic-attribute</key>
+		<dict>
+			<key>match</key>
+			<string>\b([a-zA-Z\-:]+)</string>
+			<key>name</key>
+			<string>entity.other.attribute-name.html</string>
+		</dict>
+		<key>html-string-double-quoted</key>
+		<dict>
+			<key>match</key>
+			<string>(?:=[\s]*|=>[\s]*)(")(([^#{}"\r]*)(")(?!#{[^}\r]*})|(([^"#{\r]*)(?=#{[^}\r]*[^"\r]*})))|((?&lt;=})([^#{}"\r]*)(")|((?&lt;=})([^#{}"\r]*)(?=#{[^}\r]*[^"\r]*})))</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+				<key>6</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+				<key>8</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+				<key>9</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+				<key>11</key>
+				<dict>
+					<key>name</key>
+					<string>string.quoted.double.html</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#html-entities</string>
+				</dict>
+			</array>
+		</dict>
+		<key>html-string-single-quoted</key>
+		<dict>
+			<key>match</key>
+			<string>(?:=[\s]*|=>[\s]*)(')(([^#{}'\r]*)(')(?!#{[^}\r]*})|(([^'#{\r]*)(?=#{[^}\r]*[^'\r]*})))|((?&lt;=})([^#{}'\r]*)(')|((?&lt;=})([^#{}'\r]*)(?=#{[^}\r]*[^'\r]*})))</string>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+				<key>4</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+				<key>6</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+				<key>8</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+				<key>9</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+				<key>11</key>
+				<dict>
+					<key>name</key>
+					<string>string.single.double.html</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#html-entities</string>
+				</dict>
+			</array>
+		</dict>
+		<key>html-entities</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.entity.html</string>
+						</dict>
+						<key>3</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.entity.html</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(&amp;)([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+)(;)</string>
+					<key>name</key>
+					<string>constant.character.entity.html</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>&amp;</string>
+					<key>name</key>
+					<string>invalid.illegal.bad-ampersand.html</string>
 				</dict>
 			</array>
 		</dict>
