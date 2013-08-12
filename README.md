@@ -21,7 +21,7 @@ $ git clone https://github.com/xt99/sublimetext-php-haml.git PHP\ Haml
 Plugin should automatically detect PHP HAML syntax in `*.haml` files. 
 
 Your PHP HAML syntax highlight should look like this :
-![PHP HAML syntax highlight example](/example.png "PHP HAML syntax highlight example") 
+![PHP HAML syntax highlight example](https://raw.github.com/xt99/sublimetext-php-haml/master/example.png "PHP HAML syntax highlight example") 
 
 
 ## PHP HAML Documentation

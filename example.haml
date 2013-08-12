@@ -17,3 +17,17 @@
         = $imgTitle
 
       %i.timeago= $img->created_at
+
+:css
+  /* CSS block */
+  .gallery {
+    border: 5px #cccccc solid;
+    margin: 0;
+    padding: 10px;
+  }
+
+:javascript
+  // JavaScript block
+  window.onload = function() {
+    document.title += " : Loaded";
+  }
